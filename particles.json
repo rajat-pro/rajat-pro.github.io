@@ -54,7 +54,7 @@
     },
     "move": {
       "enable": true,
-      "speed": 6,
+      "speed": 3,
       "direction": "none",
       "random": false,
       "straight": false,
@@ -107,7 +107,7 @@
   "retina_detect": true,
   "config_demo": {
     "hide_card": false,
-    "background_color": "#452D7A",
+    "background_color": "#b61924",
     "background_image": "",
     "background_position": "50% 50%",
     "background_repeat": "no-repeat",
