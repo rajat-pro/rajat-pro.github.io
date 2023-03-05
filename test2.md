@@ -1,5 +1,6 @@
 ---
 share: true
+title: www.rajat.pro
 repo:
   owner: rajat-pro
   repo: rajat-pro.github.io
