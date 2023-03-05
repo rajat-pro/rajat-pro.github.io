@@ -1,6 +1,6 @@
 ---  
+title: Title Here  
 share: true  
-title: Test Title Here  
 hardbreak: true  
 repo:  
   owner: rajat-pro  
@@ -8,6 +8,4 @@ repo:
   branch: main  
 ---  
   
-hmm... maybe this is working now?  
-  
-looks like it!
+content here
