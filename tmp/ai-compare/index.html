@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image and JSON Comparison</title>
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+        .left, .right {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+        }
+        .left {
+            border-right: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        img {
+            max-width: 100%;
+            max-height: 80vh;
+        }
+        .navigation {
+            margin-top: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            margin: 0 5px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .tab {
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background-color: #f0f0f0;
+        }
+        .tab.active {
+            background-color: #fff;
+            font-weight: bold;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow: auto;
+            height: 80vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="left">
+        <img id="itemImage" src="" alt="Item Image">
+        <div class="navigation">
+            <button onclick="prevImage()">Previous</button>
+            <button onclick="nextImage()">Next</button>
+        </div>
+    </div>
+    <div class="right">
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('Ximilar')">Ximilar</div>
+            <div class="tab" onclick="showTab('InTheLoop')">InTheLoop</div>
+        </div>
+        <pre id="jsonContent"></pre>
+    </div>
+
+    <script>
+        let items = [];
+        let currentIndex = 0;
+        let currentTab = 'Ximilar';
+
+        async function loadTSV() {
+            const response = await fetch('input.txt');
+            const text = await response.text();
+            const lines = text.trim().split('\n').slice(1); // Skip header
+            items = lines.map(line => {
+                const cols = line.split('\t');
+                return { sku: cols[0], photoUrl: cols[1] };
+            });
+            loadItem();
+        }
+
+        async function loadItem() {
+            const item = items[currentIndex];
+            document.getElementById('itemImage').src = item.photoUrl;
+            loadJSON();
+        }
+
+        async function loadJSON() {
+            const item = items[currentIndex];
+            const response = await fetch(`${currentTab}/${item.sku}.json`);
+            const json = await response.json();
+            document.getElementById('jsonContent').textContent = JSON.stringify(json, null, 2);
+        }
+
+        function prevImage() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                loadItem();
+            }
+        }
+
+        function nextImage() {
+            if (currentIndex < items.length - 1) {
+                currentIndex++;
+                loadItem();
+            }
+        }
+
+        function showTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.toggle('active', tab.textContent === tabName);
+            });
+            loadJSON();
+        }
+
+        window.onload = loadTSV;
+    </script>
+</body>
+</html>
